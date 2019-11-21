@@ -25,7 +25,7 @@ namespace AkkaAccountActors.Actors
             {
                 Receive<string>(s => s.Equals("start"), start =>
                 {
-                    Become(AwaitingDebitConfirmation);
+                    Become(AwaitingWithdrawalConfirmation);
                     
                     Console.WriteLine($"Withdrawing from account {_amount}");
                     //Withdrawal from source account
@@ -33,11 +33,11 @@ namespace AkkaAccountActors.Actors
                 });
             }
 
-            private void AwaitingDebitConfirmation()
+            private void AwaitingWithdrawalConfirmation()
             {
                 Receive<Accepted>(succeeded =>
                 {
-                    Become(AwaitingCreditConfirmation);
+                    Become(AwaitingDepositConfirmation);
                     
                     Console.WriteLine($"Depositing in account {_amount}");
                     //Deposit in destination account 
@@ -51,7 +51,7 @@ namespace AkkaAccountActors.Actors
                 });
             }
 
-            private void AwaitingCreditConfirmation()
+            private void AwaitingDepositConfirmation()
             {
                 Receive<Accepted>((succeeded =>
                 {
